@@ -7,12 +7,11 @@ namespace ConfigHelper.Manager
     {
         public static T GetCustomSection<T>(string sectionName)
         {
-            return GetCustomSection<T>(sectionName, "appsettings.json");
-        }
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.Development.json", optional: true, reloadOnChange: true);
 
-        public static T GetCustomSection<T>(string sectionName, string filename)
-        {
-            IConfigurationBuilder builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile(filename);
             IConfigurationRoot config = builder.Build();
 
             return config.GetSection(sectionName).Get<T>();
